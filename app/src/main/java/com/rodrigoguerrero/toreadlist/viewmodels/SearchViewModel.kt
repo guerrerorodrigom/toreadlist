@@ -48,4 +48,8 @@ class SearchViewModel @Inject constructor(
       bookRepository.addBook(book)
     }
   }
+
+  fun clearResults() {
+    _searchUiState.value = _searchUiState.value.copy(searchResult = emptyList())
+  }
 }

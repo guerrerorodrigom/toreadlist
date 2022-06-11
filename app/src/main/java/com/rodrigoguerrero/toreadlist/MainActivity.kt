@@ -4,12 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
@@ -31,26 +26,31 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-      setContent {
-        val navController = rememberNavController()
-
+    setContent {
+      CompositionLocalProvider(LocalNavigationProvider provides rememberNavController()) {
         ToReadListTheme {
+          val navController = LocalNavigationProvider.current
           NavHost(navController = navController, startDestination = "booklist") {
             composable("booklist") {
               val books by bookListViewModel.bookList.collectAsState(emptyList())
               bookListViewModel.getBookList()
-              BookListScreen(navController, books)
+              BookListScreen(books)
             }
             composable("search") {
               val searchUiState by searchViewModel.searchUiState.collectAsState(SearchUiState())
               SearchScreen(
                 searchUiState = searchUiState,
                 onSearch = { searchViewModel.search(it) },
-                onAddToList = { searchViewModel.addToList(it) }
+                onAddToList = { searchViewModel.addToList(it) },
+                onBackPressed = {
+                  searchViewModel.clearResults()
+                  navController.popBackStack()
+                }
               )
             }
           }
         }
       }
     }
+  }
 }

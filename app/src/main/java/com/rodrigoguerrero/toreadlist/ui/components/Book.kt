@@ -11,8 +11,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.rodrigoguerrero.toreadlist.LocalPaddings
 import com.rodrigoguerrero.toreadlist.R
 import com.rodrigoguerrero.toreadlist.models.Book
+import com.rodrigoguerrero.toreadlist.ui.theme.MyReadingTheme
 
 @Composable
 fun BookRow(
@@ -24,18 +26,18 @@ fun BookRow(
   Card(
     modifier = modifier
       .fillMaxWidth()
-      .padding(all = 8.dp),
+      .padding(all = LocalPaddings.current.small),
     elevation = 12.dp,
     shape = RoundedCornerShape(size = 11.dp)
   ) {
     Row(
       modifier = Modifier
-        .padding(16.dp)
+        .padding(LocalPaddings.current.medium)
     ) {
       AsyncImage(
         modifier = Modifier
           .width(120.dp)
-          .padding(end = 8.dp),
+          .padding(end = LocalPaddings.current.small),
         model = ImageRequest
           .Builder(LocalContext.current)
           .data(book.coverUrl)
@@ -45,9 +47,9 @@ fun BookRow(
         contentDescription = book.title
       )
       Column {
-        Text(text = book.title, style = MaterialTheme.typography.h5)
+        Text(text = book.title, style = MyReadingTheme.typography.H5)
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = book.author, style = MaterialTheme.typography.subtitle1)
+        Text(text = book.author, style = MyReadingTheme.typography.subtitle)
         Spacer(modifier = Modifier.height(4.dp))
 
         if (showAddToList) {

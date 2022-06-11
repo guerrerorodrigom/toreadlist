@@ -1,5 +1,6 @@
 package com.rodrigoguerrero.toreadlist.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
+import com.rodrigoguerrero.toreadlist.LocalPaddings
 import com.rodrigoguerrero.toreadlist.models.Book
 import com.rodrigoguerrero.toreadlist.models.SearchState
 import com.rodrigoguerrero.toreadlist.models.SearchUiState
@@ -26,6 +27,7 @@ fun SearchScreen(
   searchUiState: SearchUiState,
   onSearch: (String) -> Unit,
   onAddToList: (Book) -> Unit,
+  onBackPressed: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   var searchTerm by remember { mutableStateOf("") }
@@ -44,16 +46,22 @@ fun SearchScreen(
         onSearch = {
           keyboardController?.hide()
           onSearch(searchTerm)
+        },
+        onDone = {
+          keyboardController?.hide()
+          onSearch(searchTerm)
         }
       ),
+      singleLine = true,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp)
+        .padding(LocalPaddings.current.medium)
     )
     when (searchUiState.state) {
       SearchState.LOADING -> ProgressBar()
       SearchState.DONE -> SearchResults(searchUiState, onAddToList)
     }
+    BackHandler { onBackPressed() }
   }
 }
 
