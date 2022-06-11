@@ -14,19 +14,19 @@ import coil.request.ImageRequest
 import com.rodrigoguerrero.toreadlist.R
 import com.rodrigoguerrero.toreadlist.models.Book
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookRow(
   book: Book,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  showAddToList: Boolean = false,
+  onAddToList: (Book) -> Unit = { }
 ) {
   Card(
     modifier = modifier
       .fillMaxWidth()
       .padding(all = 8.dp),
     elevation = 12.dp,
-    shape = RoundedCornerShape(size = 11.dp),
-    onClick = { }
+    shape = RoundedCornerShape(size = 11.dp)
   ) {
     Row(
       modifier = Modifier
@@ -49,11 +49,14 @@ fun BookRow(
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = book.author, style = MaterialTheme.typography.subtitle1)
         Spacer(modifier = Modifier.height(4.dp))
-        Button(
-          onClick = { /*TODO*/ },
-          modifier = Modifier.fillMaxWidth()
-        ) {
-          Text(text = "Add to List")
+
+        if (showAddToList) {
+          Button(
+            onClick = { onAddToList(book) },
+            modifier = Modifier.fillMaxWidth()
+          ) {
+            Text(text = "Add to List")
+          }
         }
       }
     }

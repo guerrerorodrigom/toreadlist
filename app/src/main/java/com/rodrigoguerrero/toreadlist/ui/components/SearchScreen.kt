@@ -1,6 +1,5 @@
 package com.rodrigoguerrero.toreadlist.ui.components
 
-import android.app.appsearch.SearchResults
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -18,6 +16,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.rodrigoguerrero.toreadlist.models.Book
 import com.rodrigoguerrero.toreadlist.models.SearchState
 import com.rodrigoguerrero.toreadlist.models.SearchUiState
 
@@ -26,6 +25,7 @@ import com.rodrigoguerrero.toreadlist.models.SearchUiState
 fun SearchScreen(
   searchUiState: SearchUiState,
   onSearch: (String) -> Unit,
+  onAddToList: (Book) -> Unit,
   modifier: Modifier = Modifier
 ) {
   var searchTerm by remember { mutableStateOf("") }
@@ -52,18 +52,19 @@ fun SearchScreen(
     )
     when (searchUiState.state) {
       SearchState.LOADING -> ProgressBar()
-      SearchState.DONE -> SearchResults(searchUiState)
+      SearchState.DONE -> SearchResults(searchUiState, onAddToList)
     }
   }
 }
 
 @Composable
 fun SearchResults(
-  searchUiState: SearchUiState
+  searchUiState: SearchUiState,
+  onAddToList: (Book) -> Unit
 ) {
   LazyColumn {
     items(searchUiState.searchResult) { book ->
-      BookRow(book = book)
+      BookRow(book, showAddToList = true, onAddToList = onAddToList)
     }
   }
 }

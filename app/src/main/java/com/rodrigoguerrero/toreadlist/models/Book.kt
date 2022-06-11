@@ -3,7 +3,7 @@ package com.rodrigoguerrero.toreadlist.models
 data class Book(
   val title: String,
   val author: String,
-  private val coverId: Int
+  val coverId: Int
 ) {
   val coverUrl: String
     get() {

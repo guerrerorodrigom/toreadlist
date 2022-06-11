@@ -25,22 +25,27 @@ class SearchViewModel @Inject constructor(
 
   fun search(query: String) {
     viewModelScope.launch {
-        bookRepository
-          .search(query)
-          .collect { response ->
-            when (response) {
-              is NetworkResponse.Success -> {
-                _searchUiState.emit(
-                  SearchUiState(
-                    state = SearchState.DONE,
-                    searchResult = response.result ?: emptyList())
-                )
-              }
-              NetworkResponse.Loading -> _searchUiState.emit(SearchUiState(SearchState.LOADING))
-              is NetworkResponse.Error -> {}
+      bookRepository
+        .search(query)
+        .collect { response ->
+          when (response) {
+            is NetworkResponse.Success -> {
+              _searchUiState.emit(
+                SearchUiState(
+                  state = SearchState.DONE,
+                  searchResult = response.result ?: emptyList())
+              )
             }
+            NetworkResponse.Loading -> _searchUiState.emit(SearchUiState(SearchState.LOADING))
+            is NetworkResponse.Error -> {}
           }
+        }
+    }
+  }
 
+  fun addToList(book: Book) {
+    viewModelScope.launch {
+      bookRepository.addBook(book)
     }
   }
 }

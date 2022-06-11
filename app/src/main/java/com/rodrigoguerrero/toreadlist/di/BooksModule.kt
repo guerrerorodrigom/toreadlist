@@ -1,12 +1,20 @@
 package com.rodrigoguerrero.toreadlist.di
 
+import android.content.Context
+import androidx.room.Room
 import com.rodrigoguerrero.toreadlist.network.service.BookService
 import com.rodrigoguerrero.toreadlist.repositories.BookRepository
 import com.rodrigoguerrero.toreadlist.repositories.BookRepositoryImpl
+import com.rodrigoguerrero.toreadlist.storage.BookDao
+import com.rodrigoguerrero.toreadlist.storage.BookDataSource
+import com.rodrigoguerrero.toreadlist.storage.BookDataSourceImpl
+import com.rodrigoguerrero.toreadlist.storage.BooksDatabase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -23,7 +31,19 @@ object BooksModule {
   }
 
   @Provides
-  fun provideBookRepository(bookService: BookService): BookRepository {
-    return BookRepositoryImpl(bookService)
-  }
+  fun provideDatabase(@ApplicationContext context: Context): BooksDatabase =
+    Room.databaseBuilder(context, BooksDatabase::class.java, "books-db").build()
+
+  @Provides
+  fun provideBookDao(database: BooksDatabase): BookDao = database.booksDao()
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class BooksAbstractModule {
+  @Binds
+  abstract fun bindBookDataSource(dataSource: BookDataSourceImpl): BookDataSource
+
+  @Binds
+  abstract fun bindBookRepository(bookRepository: BookRepositoryImpl): BookRepository
 }

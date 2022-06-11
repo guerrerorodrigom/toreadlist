@@ -6,4 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookRepository {
   fun search(query: String): Flow<NetworkResponse<List<Book>>>
+
+  suspend fun addBook(book: Book)
+
+  fun getBookList(): Flow<List<Book>>
 }

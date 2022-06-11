@@ -4,50 +4,53 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.rodrigoguerrero.toreadlist.models.SearchUiState
+import com.rodrigoguerrero.toreadlist.ui.components.BookListScreen
 import com.rodrigoguerrero.toreadlist.ui.components.SearchScreen
 import com.rodrigoguerrero.toreadlist.ui.theme.ToReadListTheme
+import com.rodrigoguerrero.toreadlist.viewmodels.BookListViewModel
 import com.rodrigoguerrero.toreadlist.viewmodels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-  private val viewModel: SearchViewModel by viewModels()
+  private val searchViewModel: SearchViewModel by viewModels()
+  private val bookListViewModel: BookListViewModel by viewModels()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
       setContent {
-          val searchUiState by viewModel.searchUiState.collectAsState(SearchUiState())
+        val navController = rememberNavController()
 
-          ToReadListTheme {
-            SearchScreen(
-              searchUiState = searchUiState,
-              onSearch = { viewModel.search(it) }
-            )
+        ToReadListTheme {
+          NavHost(navController = navController, startDestination = "booklist") {
+            composable("booklist") {
+              val books by bookListViewModel.bookList.collectAsState(emptyList())
+              bookListViewModel.getBookList()
+              BookListScreen(navController, books)
+            }
+            composable("search") {
+              val searchUiState by searchViewModel.searchUiState.collectAsState(SearchUiState())
+              SearchScreen(
+                searchUiState = searchUiState,
+                onSearch = { searchViewModel.search(it) },
+                onAddToList = { searchViewModel.addToList(it) }
+              )
+            }
+          }
         }
       }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ToReadListTheme {
-        Greeting("Android")
     }
 }
