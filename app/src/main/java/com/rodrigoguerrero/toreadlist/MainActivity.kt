@@ -27,27 +27,25 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     setContent {
-      CompositionLocalProvider(LocalNavigationProvider provides rememberNavController()) {
-        ToReadListTheme {
-          val navController = LocalNavigationProvider.current
-          NavHost(navController = navController, startDestination = "booklist") {
-            composable("booklist") {
-              val books by bookListViewModel.bookList.collectAsState(emptyList())
-              bookListViewModel.getBookList()
-              BookListScreen(books)
-            }
-            composable("search") {
-              val searchUiState by searchViewModel.searchUiState.collectAsState(SearchUiState())
-              SearchScreen(
-                searchUiState = searchUiState,
-                onSearch = { searchViewModel.search(it) },
-                onAddToList = { searchViewModel.addToList(it) },
-                onBackPressed = {
-                  searchViewModel.clearResults()
-                  navController.popBackStack()
-                }
-              )
-            }
+      ToReadListTheme {
+        val navController = rememberNavController()
+        NavHost(navController = navController, startDestination = "booklist") {
+          composable("booklist") {
+            val books by bookListViewModel.bookList.collectAsState(emptyList())
+            bookListViewModel.getBookList()
+            BookListScreen(books)
+          }
+          composable("search") {
+            val searchUiState by searchViewModel.searchUiState.collectAsState(SearchUiState())
+            SearchScreen(
+              searchUiState = searchUiState,
+              onSearch = { searchViewModel.search(it) },
+              onAddToList = { searchViewModel.addToList(it) },
+              onBackPressed = {
+                searchViewModel.clearResults()
+                navController.popBackStack()
+              }
+            )
           }
         }
       }
