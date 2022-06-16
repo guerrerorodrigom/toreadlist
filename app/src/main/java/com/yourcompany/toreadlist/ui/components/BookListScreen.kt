@@ -38,17 +38,15 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import com.yourcompany.toreadlist.LocalNavigationProvider
 import com.yourcompany.toreadlist.models.Book
 
 @Composable
 fun BookListScreen(
   books: List<Book>
 ) {
-  val navigationController = LocalNavigationProvider.current
   Scaffold(
     floatingActionButton = {
-      FloatingActionButton(onClick = { navigationController.navigate("search") }) {
+      FloatingActionButton(onClick = { }) {
         Icon(
           imageVector = Icons.Filled.Search,
           contentDescription = "Search"
