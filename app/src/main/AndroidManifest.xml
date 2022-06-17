@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  package="com.yourcompany.toreadlist">
+  package="com.yourcompany.android.toreadlist">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <application
@@ -12,11 +12,11 @@
     android:label="@string/app_name"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
-    android:name="com.yourcompany.toreadlist.BookListApp"
+    android:name="com.yourcompany.android.toreadlist.BookListApp"
     android:theme="@style/SplashTheme"
     tools:targetApi="31">
     <activity
-      android:name="com.yourcompany.toreadlist.MainActivity"
+      android:name="com.yourcompany.android.toreadlist.MainActivity"
       android:exported="true"
       android:label="@string/app_name"
       android:theme="@style/AppTheme">
